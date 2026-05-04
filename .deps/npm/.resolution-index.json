@@ -1,0 +1,10 @@
+{
+  "EduPayChain.sol": {
+    "__sources__": {
+      "EduPayChain.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract EduPayChain {\r\n\r\n    address public admin;\r\n\r\n    enum Status {\r\n        Pending,\r\n        Verified,\r\n        Rejected\r\n    }\r\n\r\n    struct Payment {\r\n        string nim;\r\n        string semester;\r\n        uint amount;\r\n        string proofHash;\r\n        Status status;\r\n    }\r\n\r\n    mapping(uint => Payment) public payments;\r\n\r\n    uint public paymentCount;\r\n\r\n    modifier onlyAdmin() {\r\n        require(msg.sender == admin, \"Admin only\");\r\n        _;\r\n    }\r\n\r\n    constructor() {\r\n        admin = msg.sender;\r\n    }\r\n\r\n    function submitPayment(\r\n        string memory _nim,\r\n        string memory _semester,\r\n        uint _amount,\r\n        string memory _proofHash\r\n    ) public {\r\n\r\n        paymentCount++;\r\n\r\n        payments[paymentCount] = Payment(\r\n            _nim,\r\n            _semester,\r\n            _amount,\r\n            _proofHash,\r\n            Status.Pending\r\n        );\r\n    }\r\n\r\n    function verifyPayment(uint _id) public onlyAdmin {\r\n        payments[_id].status = Status.Verified;\r\n    }\r\n\r\n    function rejectPayment(uint _id) public onlyAdmin {\r\n        payments[_id].status = Status.Rejected;\r\n    }\r\n\r\n    function checkStatus(uint _id) public view returns(Status) {\r\n        return payments[_id].status;\r\n    }\r\n}",
+        "file": "EduPayChain.sol"
+      }
+    }
+  }
+}
